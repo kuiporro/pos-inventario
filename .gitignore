@@ -68,3 +68,10 @@ frontend/*.crt
 # ── Migraciones generadas (opcional: algunos equipos sí las suben) ─
 # Si quieres subirlas, comenta estas líneas:
 # backend/*/migrations/0*.py
+
+# ── Producción y Empaquetado ─────────────────────────────────────
+produccion/
+build/
+dist/
+*.spec
+

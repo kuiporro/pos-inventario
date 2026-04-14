@@ -2,9 +2,28 @@
 Django settings para sistema POS local.
 """
 
+import os
+import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# --- Rutas del Proyecto ---
+# Si corre como .exe (PyInstaller), sys.frozen es True y la app extrae sus archivos en sys._MEIPASS
+# Pero queremos que la BD y Media se guarden en la carpeta DONDE ESTÁ el .exe original, no en TEMP.
+IS_FROZEN = getattr(sys, 'frozen', False)
+
+if IS_FROZEN:
+    # Carpeta temporal donde PyInstaller extrae el código
+    BUNDLE_DIR = Path(sys._MEIPASS)
+    # Carpeta real donde el usuario hizo doble clic al .exe
+    EXE_DIR = Path(sys.executable).parent
+    
+    BASE_DIR = BUNDLE_DIR
+    DATA_DIR = EXE_DIR
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    DATA_DIR = BASE_DIR
+
+FRONTEND_DIST = BASE_DIR.parent / 'frontend' / 'dist' if not IS_FROZEN else BUNDLE_DIR / 'frontend_dist'
 
 SECRET_KEY = 'django-insecure-pos-local-tienda-decoraciones-2024-cambiar-en-produccion'
 
@@ -36,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Debe ir PRIMERO
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Sirve estáticos en producción
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -49,7 +69,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [FRONTEND_DIST] if os.path.exists(FRONTEND_DIST) else [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,7 +88,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DATA_DIR / 'db.sqlite3',
         'OPTIONS': {
             'timeout': 20,
         },
@@ -110,9 +130,14 @@ USE_TZ = True
 # --- Archivos estáticos y media ---
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [FRONTEND_DIST] if os.path.exists(FRONTEND_DIST) else []
+
+# Whitenoise config para servir React
+WHITENOISE_INDEX_FILE = True
+WHITENOISE_ROOT = FRONTEND_DIST
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = DATA_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

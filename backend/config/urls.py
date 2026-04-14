@@ -6,6 +6,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.views.generic import TemplateView
+from django.urls import re_path
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('autenticacion.urls')),   # ← auth endpoints
@@ -14,7 +17,15 @@ urlpatterns = [
     path('api/', include('reportes.urls')),
 ]
 
-# Servir archivos media en desarrollo
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Si NO estamos en producción DEBUG=False, y no cazó /api/, entonces lanzamos React
+urlpatterns += [
+    re_path(r'^(?!api/|admin/|media/|static/).*$', TemplateView.as_view(template_name="index.html"))
+]
+
+# Servir archivos media en desarrollo o producción (el proxy los servirá si no es nginx)
+from django.urls import re_path
+from django.views.static import serve
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+]
