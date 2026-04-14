@@ -1,0 +1,70 @@
+# ── Python / Django ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Entorno virtual
+venv/
+env/
+ENV/
+.env
+.venv
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Secretos — NUNCA subir
+*.pem
+*.key
+.env.local
+.env.production
+
+# ── Node / React ─────────────────────────────────────────────────
+node_modules/
+dist/
+.cache/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ── Sistema ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ── Backups ──────────────────────────────────────────────────────
+backups/
+*.bak
+
+# ── Certificados SSL locales (mkcert) ────────────────────────────
+frontend/*.pem
+frontend/*.crt
+
+# ── Migraciones generadas (opcional: algunos equipos sí las suben) ─
+# Si quieres subirlas, comenta estas líneas:
+# backend/*/migrations/0*.py
