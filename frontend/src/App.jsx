@@ -11,6 +11,10 @@ import Ventas from './pages/Ventas'
 import Devoluciones from './pages/Devoluciones'
 import Etiquetas from './pages/Etiquetas'
 import ScannerMovil from './pages/ScannerMovil'
+import Facturacion from './pages/Facturacion'
+import OCRProcesamiento from './pages/OCRProcesamiento'
+import DashboardFinanciero from './pages/DashboardFinanciero'
+import OCRMovil from './pages/OCRMovil'
 import api from './api'
 
 const NAV = [
@@ -21,9 +25,11 @@ const NAV = [
   { to: '/devoluciones',  icon: '↩',  label: 'Devoluciones'  },
   { to: '/etiquetas',     icon: '🏷️', label: 'Etiquetas'     },
   { to: '/reportes',      icon: '📊', label: 'Reportes'      },
+  { to: '/facturacion',   icon: '🧾', label: 'Facturación'   },
+  { to: '/dashboard-financiero', icon: '💰', label: 'Finanzas' },
 ]
 
-const SIN_SIDEBAR = ['/scanner-movil', '/login']
+const SIN_SIDEBAR = ['/scanner-movil', '/login', '/ocr-movil']
 
 function Sidebar() {
   const { usuario, logout } = useAuth()
@@ -129,6 +135,7 @@ export default function App() {
       <Routes>
         <Route path="/login"         element={<Login />} />
         <Route path="/scanner-movil" element={<ScannerMovil />} />
+        <Route path="/ocr-movil"     element={<OCRMovil />} />
       </Routes>
     )
   }
@@ -146,6 +153,9 @@ export default function App() {
           <Route path="/devoluciones" element={<ProtectedRoute><Devoluciones /></ProtectedRoute>} />
           <Route path="/etiquetas"    element={<ProtectedRoute><Etiquetas /></ProtectedRoute>} />
           <Route path="/reportes"     element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+          <Route path="/facturacion"  element={<ProtectedRoute><Facturacion /></ProtectedRoute>} />
+          <Route path="/facturacion/ocr/:id" element={<ProtectedRoute><OCRProcesamiento /></ProtectedRoute>} />
+          <Route path="/dashboard-financiero" element={<ProtectedRoute><DashboardFinanciero /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>

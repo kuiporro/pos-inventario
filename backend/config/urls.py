@@ -15,6 +15,7 @@ urlpatterns = [
     path('api/', include('inventario.urls')),
     path('api/', include('ventas.urls')),
     path('api/', include('reportes.urls')),
+    path('api/', include('facturacion.urls')),
 ]
 
 # Si NO estamos en producción DEBUG=False, y no cazó /api/, entonces lanzamos React

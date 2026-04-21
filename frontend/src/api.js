@@ -111,6 +111,39 @@ export const reportesApi = {
   getMasVendidos: (params) => api.get('/reportes/mas-vendidos/', { params }),
 }
 
+// ── Facturación ──────────────────────────────────────────────────
+
+export const facturacionApi = {
+  // Proveedores
+  getProveedores:      (params)   => api.get('/facturacion/proveedores/', { params }),
+  getProveedor:        (id)       => api.get(`/facturacion/proveedores/${id}/`),
+  crearProveedor:      (data)     => api.post('/facturacion/proveedores/', data),
+  actualizarProveedor: (id, data) => api.patch(`/facturacion/proveedores/${id}/`, data),
+  eliminarProveedor:   (id)       => api.delete(`/facturacion/proveedores/${id}/`),
+
+  // Facturas
+  getFacturas:       (params) => api.get('/facturacion/facturas/', { params }),
+  getFactura:        (id)     => api.get(`/facturacion/facturas/${id}/`),
+  crearFactura:      (data)   => api.post('/facturacion/facturas/', data),
+  confirmarFactura:  (id)     => api.post(`/facturacion/facturas/${id}/confirmar/`),
+  anularFactura:     (id, motivo) => api.post(`/facturacion/facturas/${id}/anular/`, { motivo }),
+
+  // OCR
+  subirDocumento:    (formData) => api.post('/facturacion/ocr/subir/', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60000,
+  }),
+  getOCRHistorial:   (params) => api.get('/facturacion/ocr/', { params }),
+  getOCRResultado:   (id)     => api.get(`/facturacion/ocr/${id}/`),
+  confirmarOCR:      (id, data) => api.post(`/facturacion/ocr/${id}/confirmar/`, data),
+
+  // Reportes financieros
+  getGanancia:       (params) => api.get('/reportes/financiero/ganancia/', { params }),
+  getFlujoCaja:      (params) => api.get('/reportes/financiero/flujo-caja/', { params }),
+  getMargen:         (params) => api.get('/reportes/financiero/margen/', { params }),
+  getTopRentables:   (params) => api.get('/reportes/financiero/top-rentables/', { params }),
+}
+
 // ── Auth ─────────────────────────────────────────────────────────
 
 export const authApi = {
@@ -120,3 +153,4 @@ export const authApi = {
 }
 
 export default api
+

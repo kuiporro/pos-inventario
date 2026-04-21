@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'ventas',
     'reportes',
     'autenticacion',
+    'facturacion',
 ]
 
 MIDDLEWARE = [
@@ -191,3 +192,9 @@ LOGGING = {
         },
     },
 }
+
+# --- OCR (Tesseract) ---
+# Ruta al ejecutable de Tesseract. Descargar: https://github.com/UB-Mannheim/tesseract/wiki
+TESSERACT_CMD = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# Ruta a Poppler (para PDF→imagen). Descargar: https://github.com/oschwartz10612/poppler-windows/releases
+POPPLER_PATH = r'C:\poppler\Library\bin'

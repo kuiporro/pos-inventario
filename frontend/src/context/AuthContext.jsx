@@ -17,29 +17,39 @@ const authAxios = axios.create({ baseURL: '/api', timeout: 8000 })
 
 export function AuthProvider({ children }) {
   const [usuario,  setUsuario]  = useState(null)
-  const [token,    setToken]    = useState(() => localStorage.getItem(TOKEN_KEY))
-  const [cargando, setCargando] = useState(true)   // validando token al montar
+  const [token,    setToken]    = useState(() => {
+    // Prioridad 1: Token en URL (flujo QR móvil)
+    const params = new URLSearchParams(window.location.search)
+    const urlToken = params.get('token')
+    if (urlToken) {
+      localStorage.setItem(TOKEN_KEY, urlToken)
+      return urlToken
+    }
+    // Prioridad 2: LocalStorage
+    return localStorage.getItem(TOKEN_KEY)
+  })
+  const [cargando, setCargando] = useState(true)
 
-  // ── Validar token al montar ────────────────────────────────────
   useEffect(() => {
-    const savedToken = localStorage.getItem(TOKEN_KEY)
-    if (!savedToken) { setCargando(false); return }
+    // Si ya tenemos un token (ya sea de URL o Storage), validarlo
+    if (!token) { 
+      setCargando(false)
+      return 
+    }
 
     authAxios.get('/auth/me/', {
-      headers: { Authorization: `Token ${savedToken}` }
+      headers: { Authorization: `Token ${token}` }
     })
       .then(({ data }) => {
-        setToken(savedToken)
         setUsuario(data)
       })
       .catch(() => {
-        // Token inválido o expirado → limpiar
         localStorage.removeItem(TOKEN_KEY)
         setToken(null)
         setUsuario(null)
       })
       .finally(() => setCargando(false))
-  }, [])
+  }, [token])
 
   // ── Login ──────────────────────────────────────────────────────
   const login = useCallback(async (username, password) => {
